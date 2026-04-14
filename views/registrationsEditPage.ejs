@@ -1,0 +1,90 @@
+<%- include("partials/head", { pageTitle, shellClass: "site-shell-public" }) %>
+<%- include("partials/publicNav") %>
+
+<section class="page-header">
+  <div class="shell-section">
+    <div class="page-header-grid">
+      <span class="eyebrow">Update seats</span>
+      <h1 class="page-title">Adjust your seats for <%= event.title %>.</h1>
+      <p class="page-copy">
+        Change the number of seats on your registration. Event Hub will keep the
+        event availability in sync with the update.
+      </p>
+    </div>
+    <%- include("partials/message", { message, errorMessage: "" }) %>
+  </div>
+</section>
+
+<section class="utility-section">
+  <div class="shell-section">
+    <div class="detail-grid">
+      <div class="detail-panel">
+        <span class="eyebrow">Registration details</span>
+        <h2 class="detail-title"><%= event.title %></h2>
+        <p class="detail-copy">
+          Update your current reservation without creating a second registration for
+          the same event.
+        </p>
+
+        <div class="detail-list">
+          <div class="detail-list-item">
+            <span class="detail-label">Registered User</span>
+            <span class="detail-value"><%= currentUserName %> (<%= currentUserEmail %>)</span>
+          </div>
+          <div class="detail-list-item">
+            <span class="detail-label">Date</span>
+            <span class="detail-value"><%= formatDate(event.date) %></span>
+          </div>
+          <div class="detail-list-item">
+            <span class="detail-label">Location</span>
+            <span class="detail-value"><%= event.location %></span>
+          </div>
+          <div class="detail-list-item">
+            <span class="detail-label">Current Seats</span>
+            <span class="detail-value"><%= registration.ticketCount %></span>
+          </div>
+          <div class="detail-list-item">
+            <span class="detail-label">Maximum Allowed Right Now</span>
+            <span class="detail-value"><%= maxSeatCount %></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-form-shell">
+        <%- include("partials/message", { message: "", errorMessage }) %>
+
+        <form
+          action="/events/registrations/<%= registration._id %>?_method=PATCH"
+          method="POST"
+        >
+          <div class="form-grid">
+            <div class="form-group form-group-full">
+              <label class="label" for="ticketCount">Seat Count</label>
+              <input
+                class="input"
+                id="ticketCount"
+                name="ticketCount"
+                type="number"
+                min="1"
+                max="<%= maxSeatCount %>"
+                required
+                value="<%= formData.ticketCount %>"
+              />
+              <p class="input-help">
+                You can keep between <strong>1</strong> and
+                <strong><%= maxSeatCount %></strong> seat(s) on this registration.
+              </p>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="button-primary" type="submit">Save Seat Changes</button>
+            <a class="button-secondary" href="/events/registrations">Back To My Events</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include("partials/footer") %>
