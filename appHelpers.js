@@ -37,7 +37,7 @@ function getUtcDateOnly(dateValue) {
   const date = new Date(dateValue);
 
   return new Date(
-    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()),
   );
 }
 
@@ -62,11 +62,7 @@ function getMonthStart(monthValue, referenceDate = new Date()) {
   }
 
   return new Date(
-    Date.UTC(
-      referenceDate.getUTCFullYear(),
-      referenceDate.getUTCMonth(),
-      1
-    )
+    Date.UTC(referenceDate.getUTCFullYear(), referenceDate.getUTCMonth(), 1),
   );
 }
 
@@ -102,7 +98,10 @@ function formatFullDayLabel(dateValue) {
 }
 
 function isPastEvent(dateValue, referenceDate = new Date()) {
-  return getUtcDateOnly(dateValue).getTime() < getUtcDateOnly(referenceDate).getTime();
+  return (
+    getUtcDateOnly(dateValue).getTime() <
+    getUtcDateOnly(referenceDate).getTime()
+  );
 }
 
 function groupRegistrationsByDate(registrations, referenceDate = new Date()) {
@@ -111,7 +110,10 @@ function groupRegistrationsByDate(registrations, referenceDate = new Date()) {
   registrations
     .filter((registration) => getEventDate(registration))
     .sort((firstRegistration, secondRegistration) => {
-      return new Date(getEventDate(firstRegistration)) - new Date(getEventDate(secondRegistration));
+      return (
+        new Date(getEventDate(firstRegistration)) -
+        new Date(getEventDate(secondRegistration))
+      );
     })
     .forEach((registration) => {
       const eventDate = getEventDate(registration);
@@ -144,23 +146,29 @@ function groupRegistrationsByDate(registrations, referenceDate = new Date()) {
     {
       upcoming: [],
       past: [],
-    }
+    },
   );
 }
 
-function buildCalendarRows(registrations, monthValue, referenceDate = new Date()) {
+function buildCalendarRows(
+  registrations,
+  monthValue,
+  referenceDate = new Date(),
+) {
   const monthStart = getMonthStart(monthValue, referenceDate);
   const monthEnd = new Date(
-    Date.UTC(monthStart.getUTCFullYear(), monthStart.getUTCMonth() + 1, 0)
+    Date.UTC(monthStart.getUTCFullYear(), monthStart.getUTCMonth() + 1, 0),
   );
   const firstCalendarDay = new Date(monthStart);
   const lastCalendarDay = new Date(monthEnd);
   const registrationsByDate = {};
   const rows = [];
 
-  firstCalendarDay.setUTCDate(firstCalendarDay.getUTCDate() - firstCalendarDay.getUTCDay());
+  firstCalendarDay.setUTCDate(
+    firstCalendarDay.getUTCDate() - firstCalendarDay.getUTCDay(),
+  );
   lastCalendarDay.setUTCDate(
-    lastCalendarDay.getUTCDate() + (6 - lastCalendarDay.getUTCDay())
+    lastCalendarDay.getUTCDate() + (6 - lastCalendarDay.getUTCDay()),
   );
 
   registrations.forEach((registration) => {
@@ -208,7 +216,7 @@ function buildCalendarRows(registrations, monthValue, referenceDate = new Date()
 function getPreviousMonthValue(monthValue, referenceDate = new Date()) {
   const monthStart = getMonthStart(monthValue, referenceDate);
   const previousMonth = new Date(
-    Date.UTC(monthStart.getUTCFullYear(), monthStart.getUTCMonth() - 1, 1)
+    Date.UTC(monthStart.getUTCFullYear(), monthStart.getUTCMonth() - 1, 1),
   );
 
   return getMonthValue(previousMonth);
@@ -217,7 +225,7 @@ function getPreviousMonthValue(monthValue, referenceDate = new Date()) {
 function getNextMonthValue(monthValue, referenceDate = new Date()) {
   const monthStart = getMonthStart(monthValue, referenceDate);
   const nextMonth = new Date(
-    Date.UTC(monthStart.getUTCFullYear(), monthStart.getUTCMonth() + 1, 1)
+    Date.UTC(monthStart.getUTCFullYear(), monthStart.getUTCMonth() + 1, 1),
   );
 
   return getMonthValue(nextMonth);
@@ -234,4 +242,9 @@ module.exports = {
   isPastEvent,
   normalizeSeatCount,
   passwordMatches,
+  // More Functions for Testing
+  getUtcDateOnly,
+  getDateKey,
+  formatDayLabel,
+  formatFullDayLabel,
 };
