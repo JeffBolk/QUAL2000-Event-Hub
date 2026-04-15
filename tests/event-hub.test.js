@@ -51,5 +51,3 @@ test.describe("Event Hub Testing", () => {
     assert.deepStrictEqual(normalizeSeatCount("11"), null);
   });
 });
-
-module.exports = { test };
